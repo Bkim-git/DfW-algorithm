@@ -41,15 +41,17 @@ You can adjust parameters in init.py → params():
 - Masking, NL_flag: Toggle masking or nonlinearity correction
 
 ### Output
-'''
+
+```
 data/Example/res/YYYY-MM-DD/
-├── results.csv        # X, Y, ground-truth, estimation, std
-├── report.txt         # Parameters used
-├── Estimate.png       # Estimated bathymetry map
-├── Groundtruth.png    # Ground truth depth map
-├── Diff.png           # Difference map
-└── Std.png            # Standard deviation map
-'''
+├── results.csv       # X, Y, ground-truth, estimation, std
+├── report.txt        # Parameters used
+├── Estimate.png      # Estimated bathymetry map
+├── Groundtruth.png   # Ground truth depth map
+├── Diff.png          # Difference map
+└── Std.png           # Standard deviation map
+```
+
 
 ## Citation
 If you use this tool in your research, please cite:
