@@ -1,8 +1,6 @@
-# Depth-from-Wave (DfW) Algorithm
+# Description
 
-A Python implementation of the **DfW** algorithm for water depth mapping from coastal surface wave video.
-
-## Overview
+This is a Python implementation of the **DfW** algorithm for water depth mapping from coastal surface wave video.
 This tool retrieves nearshore water depth map from surface wave video by analyzing dynamic wave patterns and solving the nonlinear dispersion relation.
 
 ### Project Structure
