@@ -28,6 +28,7 @@ DfW/
    pip install numpy scipy matplotlib opencv-python scikit-image rasterio
 3. Edit the working_dir path in runfile.py to point to your project directory.
 4. Run the script:
+
    python runfile.py
 
 ## Parameters
