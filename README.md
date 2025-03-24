@@ -15,11 +15,9 @@ DfW/
 │   └── DfW.py               # Main DfW operator and postprocessing modules  
 └── data/                    # Example dataset  
     └── Example/  
-        ├── input.npz  
-        ├── gt/  
-        │   └── mask.npy  
-        ├── cali/  
-        │   └── groundtruth.tif  
+        ├── input.npz        # Input video file with local coordinates
+        ├── mask.npy         # Pre-defined masking array
+        ├── groundtruth.tif  # Ground-truth data
         └── res/             # Results will be saved here  
 ```
 
