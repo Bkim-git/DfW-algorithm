@@ -40,7 +40,8 @@ You can adjust parameters in init.py → params():
 - H_ref, h_ref, theta_ref: Reference wave parameters
 - Masking, NL_flag: Toggle masking or nonlinearity correction
 
-## Output
+### Output
+'''
 data/Example/res/YYYY-MM-DD/
 ├── results.csv        # X, Y, ground-truth, estimation, std
 ├── report.txt         # Parameters used
@@ -48,6 +49,7 @@ data/Example/res/YYYY-MM-DD/
 ├── Groundtruth.png    # Ground truth depth map
 ├── Diff.png           # Difference map
 └── Std.png            # Standard deviation map
+'''
 
 ## Citation
 If you use this tool in your research, please cite:
