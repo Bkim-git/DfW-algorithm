@@ -62,7 +62,7 @@ def load_inputfile(Case):
     return Vid, extent, report
 
 def load_gt(basemap, extent, Case, MWL = 0): 
-    data_location = f'data/{Case}/gt/'
+    data_location = f'data/{Case}/'
     filepath = data_location + r'groundtruth.tif'
 
     dformat = filepath[-3:]
