@@ -5,7 +5,8 @@ A Python implementation of the **DfW** algorithm for water depth mapping from co
 ## Overview
 This tool retrieves nearshore water depth map from surface wave video by analyzing dynamic wave patterns and solving the nonlinear dispersion relation.
 
-## Project Structure
+### Project Structure
+```
 DfW/  
 ├── runfile.py               # Entry point to execute the DfW algorithm  
 ├── Libs/                    # Library folder containing core modules  
@@ -20,6 +21,8 @@ DfW/
         ├── cali/  
         │   └── groundtruth.tif  
         └── res/             # Results will be saved here  
+```
+
 
 ## Getting Started
 1. Clone the repository or download the code.
