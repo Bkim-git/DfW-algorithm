@@ -101,7 +101,7 @@ class FreeFormMasker:
         mask4nan = (firstframe == 0) | np.isnan(firstframe)
         mask_path  = os.path.join(params['Working_dir'], 
                                   'data', 
-                                  params['Case'], 'cali', r'mask.npy')
+                                  params['Case'], r'mask.npy')
         
         if os.path.isfile(mask_path):
             mask = np.load(mask_path)
