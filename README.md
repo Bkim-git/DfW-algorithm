@@ -56,3 +56,6 @@ data/Example/res/YYYY-MM-DD/
 
 ## Citation
 If you use this tool in your research, please cite:
+
+## Contact
+Feel free to contact me via https://bkim-git.github.io/
