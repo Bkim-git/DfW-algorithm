@@ -1,40 +1,53 @@
-# -*- coding: utf-8 -*-
 """
-DfW Algorithm (v1.0)
+@author: Byunguk Kim, Seoul National University
 
-Author: Byunguk Kim
-Affiliation: Seoul National University
+This script executes the Depth from Wave (DfW) algorithm.
+It includes loading input data, running the core operator,
+and performing postprocessing and visualization.
 
-This script executes the Depth-from-Wave (DfW) algorithm
-
-Modules:
-- init: Initializes parameters, loads inputs and ground truth
-- DfW: Core algorithm, post-processing, and visualization
-
-Usage:
-    Update the `working_dir` and ensure all dependencies are available.
+Ensure the directory structure and module dependencies are correctly set before running.
 """
 
+# === Standard Library Imports ===
 import os, sys
 
-def main():    
-    # Set working directory (update as needed)    
-    working_dir =  r'A:/05_Codes/DfW_v1.0_package'
-    os.chdir(working_dir)
-    sys.path.append(working_dir+'/Libs')
-    
-    # Local imports
-    import init, DfW
-    
-    # Initialize parameters and input 
-    params         =  init.params(working_dir)
-    Vid, extent, _ =  init.load_inputfile(params['Case'])
-    groundtruth    =  init.load_gt(Vid[:,:,0], extent, params['Case'])
-    
-    # Run DfW processing
-    result =  DfW.Operator(Vid, extent, params).run()
-    DfW.postprocessing(params).run(result, groundtruth)    
-    DfW.visualization(Vid, extent, params).run()
+# === Set Working Directory ===
+# Specify the main directory where the DfW code and libraries reside
+working_dir = r'E:\05_Codes\DfW_package\DfW_1.1'
+os.chdir(working_dir)
+sys.path.append(os.path.join(working_dir, 'Libs'))
+
+# === Local Module Imports ===
+import init, DfW
+
+# === Configuration ===
+Site  = 'Example'  # Site identifier (used for file naming and folder structures)
+Cases = ['Case0']
+
+# === Main Execution ===
+def main():
+    for Case in Cases:
+        # Load input video, validation data, and configuration parameters for each case.
+        params = init.params(working_dir, Site, Case, dirname=None)
+        Vid, extent = init.load_inputfile(params)
+        groundtruth = init.load_gt(Vid[:, :, 0], extent, params)
+        
+        # Redirect standard output to a log file
+        sys.stdout = init.logger(params)
+        
+        # Perform the DfW algorithm and visualize the results.
+        DfW.operator(Vid, extent, params, gt=groundtruth).run()
+        DfW.postprocessing(params).run(groundtruth)
+        DfW.visualization(Vid, extent, params, max_depth=6, interval=0.5).run()
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
