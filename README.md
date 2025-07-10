@@ -26,7 +26,7 @@ DfW/
 1. Clone the repository or download the code.
 2. Ensure you have the required Python packages:
    ```bash
-   pip install numpy scipy matplotlib opencv-python scikit-image rasterio
+   pip install numpy scipy matplotlib opencv-python scikit-image rasterio pydmd
 3. Edit the working_dir path in runfile.py to point to your project directory.
 4. Run the script:
 
