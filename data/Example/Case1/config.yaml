@@ -1,0 +1,49 @@
+# -------------------------------
+# Computational congifurations
+# -------------------------------
+dx: 1.0                # Spatial resolution in meters (grid spacing)
+dt: 0.5                # Temporal resolution in seconds (frame interval)
+VidSeg: 40             # Duration of each video segment in seconds
+jump: 26              # Interrogation interval in meters
+
+# -------------------------------
+# Windowing settings
+# -------------------------------
+win_coef: 1.5          #
+modenum : 6
+
+# -------------------------------
+# Outlier detecting thresholds
+# -------------------------------
+Sth: 0.1              # Spectral energy threshold (dimensionless)
+
+# -------------------------------
+# Output and control flags
+# -------------------------------
+flag_Masking: on            # 'on' or 'off' for applying land/sea mask
+flag_Logging: on       # 'on' to save log files
+flag_whitecapping: off
+flag_ModeSaving: off      # 'on' for exporting Mode (x,y,t) in npy format
+
+# -------------------------------
+# Nonlinearity correction settings
+# -------------------------------
+flag_Nonlinearity: on           # 'on' to enable nonlinear wave correction
+flag_Activation: 'full'           # 'on' to enable nonlinear wave correction
+H_ref: 0.54            # Wave height at a reference point in shallow water
+h_ref: 2.02            # Water depth at a reference point in shallow water
+theta_ref: 5.76        # Wave direction at a reference point in shallow water (use null for None)
+alpha: 0.5        # (defualt = 0.5)
+beta: 10        # Reference wave direction in radians (use null for None)
+
+# -------------------------------
+# Nonlinearity correction settings
+# -------------------------------
+flag_Currents: off        # Reference wave direction in radians (use null for None)
+
+# -------------------------------
+# Optional: advanced I/O or cache control
+# (leave blank or remove if unused)
+# -------------------------------
+# cache_enabled: true  # Enable caching intermediate results
+# export_format: npz   # Output file format (e.g., npz, mat)
