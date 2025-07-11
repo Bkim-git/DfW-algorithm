@@ -55,10 +55,10 @@ data/Example/res/YYYY-MM-DD/
 └── Diff.png          # Difference map
 ```
 
-
 ## Citation
-If you use this tool in your research, please cite:
+If you find this tool helpful in your research, please consider citing the following works:
 - Kim, B., Park, Y. S., Noh, H., & Lee, M. (2025). Improving accuracy of image-based depth inversion with an adaptive window optimization. Coastal Engineering Journal, 67(2), 306-318.
 - Kim, B., Noh, H., Park, Y. S., & Lee, M. (2023). Non-spectral linear depth inversion using drone-acquired wave field imagery. Applied Ocean Research, 138, 103625.
+- 
 ## Contact
 Feel free to contact me via **https://bkim-git.github.io/**
