@@ -14,11 +14,15 @@ DfW/
 │   ├── modules.py           # Utility functions and core wave analysis tools  
 │   └── DfW.py               # Main DfW operator and postprocessing modules  
 └── data/                    # Example dataset  
-    └── Example/  
-        ├── input.npz        # Input video file with local coordinates
-        ├── mask.npy         # Pre-defined masking array
-        ├── groundtruth.tif  # Ground-truth data
-        └── res/             # Results will be saved here  
+    └── Example/
+        └── Case1/  
+            ├── input.mov            # Input video file
+            ├── extent.txt           # Local coordinates
+            ├── basemap.png          # Sattelite image within the extent
+            ├── config.yaml          # Input parameters
+            ├── groundtruth/    
+            │   ├── groundtruth.tif  # Ground-truth data
+            └── res/                 # Results will be saved here
 ```
 
 
@@ -29,7 +33,6 @@ DfW/
    pip install numpy scipy matplotlib opencv-python scikit-image rasterio pydmd
 3. Edit the working_dir path in runfile.py to point to your project directory.
 4. Run the script:
-
    python runfile.py
 
 ### Parameters
@@ -49,13 +52,13 @@ data/Example/res/YYYY-MM-DD/
 ├── report.txt        # Parameters used
 ├── Estimate.png      # Estimated bathymetry map
 ├── Groundtruth.png   # Ground truth depth map
-├── Diff.png          # Difference map
-└── Std.png           # Standard deviation map
+└── Diff.png          # Difference map
 ```
 
 
 ## Citation
 If you use this tool in your research, please cite:
-
+Kim, B., Park, Y. S., Noh, H., & Lee, M. (2025). Improving accuracy of image-based depth inversion with an adaptive window optimization. Coastal Engineering Journal, 67(2), 306-318.
+Kim, B., Noh, H., Park, Y. S., & Lee, M. (2023). Non-spectral linear depth inversion using drone-acquired wave field imagery. Applied Ocean Research, 138, 103625.
 ## Contact
-Feel free to contact me via https://bkim-git.github.io/
+Feel free to contact me via **https://bkim-git.github.io/**
