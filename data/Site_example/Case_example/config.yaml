@@ -1,0 +1,29 @@
+# ===============================================================
+# Computational Configuration
+# ===============================================================
+dx: 1.0                # Target spatial grid spacing [m]
+dt: 0.5                # Temporal sampling interval [s]
+VidSeg: 180            # Video segmentation length per batch [s]
+step: 30               # Spatial stride for interrogation grid [m]
+n_jobs: 8              # Number of parallel worker processes
+
+# ===============================================================
+# Depth Inversion Parameters
+# ===============================================================
+win_coef: 1.5          # Window size scaling factor for local spectral analysis
+modenum: 6             # Number of retained dominant modes in spectral decomposition
+Sth: 0.2               # Threshold for outlier rejection based on local slope criteria
+
+# ===============================================================
+# Field Condition
+# ===============================================================
+fp: 0.2
+H0: null
+h0: null
+
+# ===============================================================
+# Control Flags
+# ===============================================================
+flag_masking: on       # Enable user-defined spatial mask (on | off)
+flag_nonlinearity: off # Enable nonlinear wave correction module (on | off)
+flag_bandpass: on      # Enable bandpass filtering before DMD (on | off)
