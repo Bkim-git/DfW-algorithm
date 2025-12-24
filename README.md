@@ -35,7 +35,7 @@ DfW/
 
    python runfile.py
 
-### Parameters
+### Configuration
 Parameters can be adjusted in `config.yaml`.
 
 - `dx`: Target spatial grid spacing (m)
