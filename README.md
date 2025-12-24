@@ -19,7 +19,7 @@ DfW/
 			├── input.mp4        # Input video file
 			├── extent.txt       # ROI range in local coordinate (xmin, xmax, ymin, ymax)
 			├── config.yaml      # Configuration parameters
-			├── gt/              # Folder containing groundtruth data in .tif or .csv format.
+			├── groundtruth.tif  # Groundtruth data in .tif or .csv format.
 			└── res/             # Results will be saved here  
 ```
 
