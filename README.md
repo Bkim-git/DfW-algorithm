@@ -46,7 +46,7 @@ Parameters can be adjusted in `config.yaml`.
 <!-- Spectral / modal -->
 - `win_coef`: Window size scaling factor for local wavenumber estimation
 - `modenum`: Number of retained dominant modes in DMD
-- `Sth`: Threshold for outlier rejection based on local slope criteria
+- `Sth`: Threshold for outlier rejection based on local slope criteria (m/m)
 - `fp`: Peak frequency (Hz) (If available)
 <!-- Flags -->
 - `flag_masking`: Enable user-defined spatial mask
