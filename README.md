@@ -47,7 +47,7 @@ Parameters can be adjusted in `config.yaml`.
 - `win_coef`: Window size scaling factor for local wavenumber estimation
 - `modenum`: Number of retained dominant modes in DMD
 - `Sth`: Threshold for outlier rejection based on local slope criteria
-- `fp`: Peak frequency (Hz)
+- `fp`: Peak frequency (Hz) (If available)
 
 - `flag_masking`: Enable user-defined spatial mask
 - `flag_nonlinearity`: Enable nonlinear wave correction module
