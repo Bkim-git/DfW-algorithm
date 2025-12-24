@@ -44,9 +44,9 @@ Parameters can be adjusted in `config.yaml`.
 - `step`: Spatial stride for the interrogation grid (m)
 - `n_jobs`: Number of parallel worker processes
 <!-- Spectral / modal -->
-- `win_coef`: Window size scaling factor for local wavenumber estimation
-- `modenum`: Number of retained dominant modes in DMD
-- `Sth`: Threshold for outlier rejection based on local slope criteria (m/m)
+- `win_coef`: Window size scaling factor for local wavenumber estimation (default = 1.5)
+- `modenum`: Number of retained dominant modes in DMD (default = 6)
+- `Sth`: Threshold for outlier rejection based on local slope criteria (m/m, default = 0.3)
 - `fp`: Peak frequency (Hz) (If available)
 <!-- Flags -->
 - `flag_masking`: Enable user-defined spatial mask
