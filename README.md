@@ -36,22 +36,25 @@ DfW/
    python runfile.py
 
 ### Parameters
-You can adjust parameters in config.yaml:
-dx: Target spatial grid spacing (m)
-dt: Temporal sampling interval (s)
-VidSeg: Video segmentation length per batch (s)
-step: Spatial stride for the interrogation grid (m)
-n_jobs: Number of parallel worker processes
+Parameters can be adjusted in `config.yaml`.
 
-win_coef: Window size scaling factor for local wavenumber estimation
-modenum: Number of retained dominant modes in DMD
-Sth: Threshold for outlier rejection based on local slope criteria
+#### Grid and Processing
+- `dx`: Target spatial grid spacing (m)
+- `dt`: Temporal sampling interval (s)
+- `VidSeg`: Video segmentation length per batch (s)
+- `step`: Spatial stride for the interrogation grid (m)
+- `n_jobs`: Number of parallel worker processes
 
-fp: Peak frequency (Hz)
+#### Spectral and Modal Analysis
+- `win_coef`: Window size scaling factor for local wavenumber estimation
+- `modenum`: Number of retained dominant modes in DMD
+- `Sth`: Threshold for outlier rejection based on local slope criteria
+- `fp`: Peak frequency (Hz)
 
-flag_masking: Enable user-defined spatial mask
-flag_nonlinearity: Enable nonlinear wave correction module
-flag_bandpass: Enable temporal bandpass filtering
+#### Processing Flags
+- `flag_masking`: Enable user-defined spatial mask
+- `flag_nonlinearity`: Enable nonlinear wave correction module
+- `flag_bandpass`: Enable temporal bandpass filtering
 
 
 ### Output
