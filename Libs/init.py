@@ -7,6 +7,7 @@ https://bkim-git.github.io/
 
 """
 import time
+import sys
 from pathlib import Path
 from datetime import datetime
 
@@ -86,28 +87,6 @@ def load_params(
         "site": site,
         "case": case,
     }
-
-    # ------------------------------------------------------------------
-    # Logging and reporting
-    # ------------------------------------------------------------------
-    if verbose:
-        print("=" * 50)
-        print("Parameter Configuration")
-        print("-" * 50)
-        for k, v in params.items():
-            print(f"{k:20s}: {v}")
-        print("=" * 50 + "\n")
-
-        report_path = savedir / "Report_configurations.txt"
-        with report_path.open("w") as f:
-            f.write("========== Parameter Configuration ==========\n\n")
-            f.write(f"Site   : {site}\n")
-            f.write(f"Case   : {case}\n")
-            f.write(f"savedir: {savedir}\n\n")
-            f.write("--------------- Parameters ----------------\n")
-            for k, v in params.items():
-                f.write(f"{k} : {v}\n")
-            f.write("-------------------------------------------\n")
 
     return params
 
@@ -199,7 +178,7 @@ def load_gt(video, extent, params):
     site = params.get("site")
     case = params.get("case")
 
-    gt_dir = Path("data") / site / case
+    gt_dir = Path("data") / site / case / "gt"
     if not gt_dir.exists():
         return None
 
@@ -287,3 +266,51 @@ def load_gt(video, extent, params):
 
     return gt
 
+class Tee:
+    def __init__(self, *streams):
+        self.streams = streams
+
+    def write(self, data):
+        for s in self.streams:
+            s.write(data)
+            s.flush()
+
+    def flush(self):
+        for s in self.streams:
+            s.flush()
+
+def setup_logging(params, logfile="console.log"):
+    """
+    Append all stdout/stderr to a log file under params['savedir'].
+    Console output is preserved.
+    """
+
+    savedir = Path(params["savedir"])
+    savedir.mkdir(parents=True, exist_ok=True)
+
+    logpath = savedir / logfile
+    f = open(logpath, "a", encoding="utf-8")
+
+    tee = Tee(sys.stdout, f)
+    sys.stdout = tee
+    sys.stderr = tee
+
+    print("\n" + "=" * 50)
+    print(f"Logging resumed at {datetime.now()}")
+    print("=" * 50)
+    print("Parameter Configuration")
+    print("-" * 50)
+    for k, v in params.items():
+        print(f"{k:20s}: {v}")
+    print("=" * 50 + "\n")
+
+    return f
+
+def close_logging(log_handle):
+    print("=" * 50)
+    print("Logging closed\n")
+
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+
+    log_handle.close()

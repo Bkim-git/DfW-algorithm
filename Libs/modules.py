@@ -21,16 +21,13 @@ warnings.filterwarnings("ignore", category=UserWarning, module="pydmd")
 """
 01. Preprocessings
 """
-def LanczosResem(I, gt, dx, dy, target):
+def LanczosResem(I, dx, dy, target):
     r_x = dx / target
     r_y = dy / target
 
     Nx_new = int(I.shape[1] * r_x)
     Ny_new = int(I.shape[0] * r_y)
     new_size = (Nx_new, Ny_new)
-    
-    if gt is not None:
-        gt = cv2.resize(gt, new_size, interpolation=cv2.INTER_LANCZOS4)
 
     Nt = I.shape[2]
     I_rs = np.empty((Ny_new, Nx_new, Nt), dtype=np.float32)
@@ -43,19 +40,29 @@ def LanczosResem(I, gt, dx, dy, target):
             raise ValueError(f"Slice {i} contains NaN or Inf")
         I_rs[:, :, i] = cv2.resize(frame, new_size, interpolation=cv2.INTER_LANCZOS4)
 
-    return I_rs, gt
+    return I_rs
 
 def subwindowing(frame, interg_point, winsiz):
     x_idx, y_idx = interg_point
+    if frame.mask[y_idx, x_idx]:
+        return None
+    
     x_min  =  max(int(x_idx - winsiz[0]//2), 0)
     x_max  =  min(int(x_idx + winsiz[0]//2), frame.shape[1])
     y_min  =  max(int(y_idx - winsiz[1]//2), 0)
     y_max  =  min(int(y_idx + winsiz[1]//2), frame.shape[0])
     windowsize = (x_max - x_min)*(y_max - y_min)
-    if windowsize > winsiz[0]*winsiz[1]*(2/3):
-        return frame[y_min:y_max, x_min:x_max]
-    else:
+    if windowsize < winsiz[0]*winsiz[1]*(2/3):
         return None
+    
+    sub = frame[y_min:y_max, x_min:x_max].copy()
+    bad = sub.mask if np.ma.isMaskedArray(sub) else ~np.isfinite(sub)
+
+    if bad.sum() >= 0.5 * bad.size:
+        return None
+    else:
+        return sub
+
 
 def WhitecappingRemoval(I):
     I = I.astype(np.float32)
@@ -109,7 +116,7 @@ class FreeFormMasker:
         self.img_display = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
         self.masks_history = []
 
-        window_name = "Image Selection Tool"
+        window_name = "Freeform Masking Tool"
         self.initialize_window(window_name)
 
         while True:
@@ -169,6 +176,10 @@ class FreeFormMasker:
 def ImageEnhancement(I, dt):
     if not np.ma.isMaskedArray(I):
         I = np.ma.masked_array(I, mask=False)
+        
+    bad_pix = np.any((I == 0) | (~np.isfinite(I)), axis=2)
+    I.mask = np.logical_or(I.mask, bad_pix[:, :, None])
+        
     I = I.astype(np.float32, copy=False)
     I -= np.ma.mean(I, axis=2, keepdims=True)
     I /= np.ma.std(I)
@@ -237,31 +248,69 @@ class DMD():
         plt.close('all')
 
     def PlottingDynamicModes(self):
-        Phi = np.array(self.Phi.real, copy=True)
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from matplotlib.animation import FuncAnimation, FFMpegWriter
+        from pathlib import Path
+    
+        Phi = np.asarray(self.Phi)
         T, cont = self.T, self.cont
-        nmode = Phi.shape[0]
+        nmode, H, W = Phi.shape
     
         ncol = int(np.ceil(np.sqrt(nmode)))
         nrow = int(np.ceil(nmode / ncol))
+        vmax = np.percentile(np.abs(Phi.real[np.isfinite(Phi.real)]), 99)
     
-        vmax = np.percentile(np.abs(Phi[np.isfinite(Phi)]), 99)
-    
+        # ---------- PNG snapshot ----------
         fig, axes = plt.subplots(nrow, ncol, figsize=(3*ncol, 3*nrow))
         axes = np.atleast_2d(axes)
     
         for j in range(nmode):
-            ax = axes[j // ncol, j % ncol]
-            ax.imshow(Phi[j, :, :].real, cmap='RdYlBu',
-                      vmin=-vmax, vmax=vmax, origin='lower')
+            ax = axes[j//ncol, j % ncol]
+            ax.imshow(Phi[j].real, cmap="RdYlBu",
+                      vmin=-vmax, vmax=vmax, origin="lower")
             ax.set_title(f"Mode {j+1}\nTp={T[j]:.2f}s, c={cont[j]*100:.1f}%", fontsize=7)
-            ax.set_xticks([]); ax.set_yticks([])
+            ax.axis("off")
     
         for k in range(nmode, nrow*ncol):
-            axes[k // ncol, k % ncol].axis('off')
+            axes[k//ncol, k % ncol].axis("off")
     
         plt.tight_layout()
-        plt.savefig(Path(self.savedir) / f"DynamicModes_Seg{self.seg_idx}.png", dpi=300)
-        plt.close('all')
+        plt.savefig(Path(self.savedir)/f"DynamicModes_Seg{self.seg_idx}.png", dpi=300)
+        plt.close()
+    
+        # ---------- MP4 animation ----------
+        fps, duration = 2, 30.0
+        t = np.linspace(0, duration, int(fps*duration))
+        omega = 2*np.pi / np.asarray(T)
+    
+        fig, axes = plt.subplots(nrow, ncol, figsize=(3*ncol, 3*nrow))
+        axes = np.atleast_2d(axes)
+        ims = []
+    
+        for j in range(nmode):
+            ax = axes[j//ncol, j % ncol]
+            snapshot = Phi[j].real
+            snapshot -= np.nanmean(snapshot)
+            im = ax.imshow(snapshot, cmap="RdYlBu",
+                           vmin=-vmax, vmax=vmax,
+                           origin="lower", animated=True)
+            ax.set_title(f"Mode {j+1}", fontsize=7)
+            ax.axis("off")
+            ims.append(im)
+    
+        for k in range(nmode, nrow*ncol):
+            axes[k//ncol, k % ncol].axis("off")
+    
+        def update(i):
+            for j in range(nmode):
+                ims[j].set_array(np.real(Phi[j] * np.exp(1j*omega[j]*t[i])))
+            return ims
+    
+        ani = FuncAnimation(fig, update, frames=len(t), blit=True)
+        ani.save(Path(self.savedir)/f"DynamicModes_Seg{self.seg_idx}.mp4",
+                 writer=FFMpegWriter(fps=15, bitrate=2000))
+        plt.close()
 
     def _bandpass_filter(self, freq_valid):
         fs = 1.0 / self.dt
@@ -273,13 +322,13 @@ class DMD():
         self.I_valid = filtfilt(b, a, self.I_valid, axis=1, method="pad")
 
     def dmd(self, fp):
-        freq_valid = np.array([max(0.6*fp, 1/32), min(1.5*fp, 1/2)], dtype=float)
+        freq_valid = np.array([max(0.6*fp, 1/16), min(1.5*fp, 1/2)], dtype=float)
         period_valid = 1 / freq_valid
         
         if self.flag_bandpass:
             self._bandpass_filter(freq_valid)
-            
-        dmd = OptDMD(svd_rank = 3*self.r, opt=True)
+        
+        dmd = OptDMD(svd_rank = 2*self.r + 2, opt=True)
         dmd.fit(self.I_valid)
  
         omega = np.log(dmd.eigs) / self.dt
@@ -296,14 +345,14 @@ class DMD():
         self.T = T[valid_idx]
         self.cont = cont[valid_idx]/np.sum(cont[valid_idx])
         
-        self.PlottingSpectrum(freq_valid, fp)
-        self.PlottingDynamicModes()
+        if self.params.get("flag_show_DMD", True):
+            self.PlottingSpectrum(freq_valid, fp)
+            self.PlottingDynamicModes()
         
     def run(self):
         fp = self.params['fp'] if 'fp' in self.params else self.peak_frequency()
         self.dmd(fp)
         return self.Phi, self.T, self.cont
-
 
 def k_solver(Phi, dx):
     Phi = np.nan_to_num(
@@ -344,6 +393,39 @@ def k_solver(Phi, dx):
 
     return (2*np.pi*k if k > 0 else np.nan), theta_peak
 
+def k_solver_FFT(Phi, dx):
+    Phi = Phi.filled(0.0)
+    Phi = Phi.real.astype(np.float32, copy=False)
+    Phi = np.nan_to_num(Phi, nan=0.0, posinf=0.0, neginf=0.0)
+    Phi -= np.mean(Phi)
+    Phi = cv2.GaussianBlur(Phi, (3, 3), 0)
+
+    ntheta = min(max(Phi.shape), 181)
+    theta = np.linspace(0.0, 180.0, ntheta, dtype=np.float32)
+    sino = radon(Phi, theta=theta, circle=False)
+
+    idx = np.nanargmax(np.sum(sino * sino, axis=0))
+    theta_peak = 2*np.pi - np.deg2rad(theta[idx])
+
+    proj = sino[:, idx]
+    proj /= (np.abs(np.cos(theta_peak)) + np.abs(np.sin(theta_peak))) * max(Phi.shape)
+
+    n = proj.size
+    n_pad = 1 << (n - 1).bit_length()
+    fft = np.fft.rfft(proj, n_pad) / n
+    freq = np.fft.rfftfreq(n_pad, dx)
+    mag = np.abs(fft)
+
+    mag[(freq <= 1/(n*dx)) | (freq >= 1/2)] = 0.0
+    pk = np.argmax(mag)
+
+    if 0 < pk < mag.size - 1:
+        c = np.polyfit(freq[pk-1:pk+2], mag[pk-1:pk+2], 2)
+        k = -c[1] / (2*c[0]) if c[0] != 0 else freq[pk]
+    else:
+        k = freq[pk]
+
+    return (2*np.pi*k if k > 0 else np.nan), theta_peak
 
 def depth_single_point(loc_idx,
                        indices,
@@ -362,7 +444,7 @@ def depth_single_point(loc_idx,
     hstack = np.full(nmode, np.nan)
     kstack = np.full((nmode, 2), np.nan)
 
-    winsiz_init = np.minimum(win_coef*1.56*(T**2)/dx, 200/dx)
+    winsiz_init = np.minimum(win_coef*1.56*(T**2)/dx, 150/dx)
     
     x, y = indices[loc_idx]
 
@@ -372,12 +454,13 @@ def depth_single_point(loc_idx,
         tol, count, k_old = 1, 0, None
         
         DM_slice = DMs[j]
+        
         while tol > 1e-2 and count < 10:
             count += 1
             DM_win = subwindowing(DM_slice, (x, y), subwindow)
 
-            if isinstance(DM_win, np.ndarray) and np.sum(DM_win.mask)/DM_win.size < 0.5:
-                k, theta = k_solver(DM_win, dx)
+            if isinstance(DM_win, np.ndarray):
+                k, theta = k_solver_FFT(DM_win, dx)
 
                 if np.isnan(k): 
                     break
@@ -385,21 +468,21 @@ def depth_single_point(loc_idx,
                 if k_old is not None:
                     tol = abs((k - k_old) / (k_old + 1e-6))
                 k_old = k
-
-                wavelength = np.clip(np.array([
+                
+                lamb_apparent = np.clip(np.array([
                     2*np.pi / (np.maximum(k, 1e-10) * np.maximum(abs(np.cos(theta)), 1e-10)),
                     2*np.pi / (np.maximum(k, 1e-10) * np.maximum(abs(np.sin(theta)), 1e-10))
-                ]), 20, 200)
+                ]), 20, 150)
 
-                subwindow = (win_coef * wavelength / dx).astype(int)
+                subwindow = (win_coef * lamb_apparent / dx).astype(int)
             else:
                 break
-        
-        theta = np.mod(theta, 2*np.pi)
+
+        # theta = np.mod(theta, 2*np.pi)
         kstack[j] = np.array([k*np.cos(theta), k*np.sin(theta)], dtype=float)
 
         argument = (2*np.pi/T[j])**2 / (k+1e-8) / 9.81
-        hstack[j] = 1/k*np.arctanh(argument) if not np.isnan(argument) and argument < 1 else np.nan
+        hstack[j] = 1/k*np.arctanh(argument) if not np.isnan(argument) and argument < (1-1e-2) else np.nan
 
     return hstack, kstack
 
@@ -427,7 +510,7 @@ def nonlinearity_correction(h_ini, T, H0, h0, alpha = 0.5, beta = 10):
 """
 from scipy.spatial import KDTree
 def Excludingoutlier(Sth, distance, interg_pts, h):
-    h = np.asarray(h)
+    h = np.asarray(h, dtype=float, copy = True)
     coordinates = interg_pts
     tree = KDTree(coordinates)
     outlier_count = 0
@@ -435,14 +518,17 @@ def Excludingoutlier(Sth, distance, interg_pts, h):
         indices = tree.query_ball_point(coordinates[i], distance*1.05)
         indices.remove(i)
         neighbors = h[indices]
-        if len(neighbors) > 0:
-            slope = np.arctan(np.abs(h[i] - np.nanmean(neighbors))/distance)
+        nb = neighbors[np.isfinite(neighbors)]
+        if nb.size > 0:
+            slope = np.arctan(np.abs(h[i] - nb.mean()) / distance)
             if slope > Sth:
                 h[i] = np.nan
                 outlier_count += 1
-       
+               
     percentage_replaced = (outlier_count / len(h)) * 100
-    print(f"- substep: _outlier_exclusion [{outlier_count}/{len(h)}({percentage_replaced:.2f}%)]")
+    print(r"- substep: _outlier_exclusion"
+          f" [{outlier_count}/{len(h)} ({percentage_replaced:.2f}% "
+          r"excluded)]")
     return h
 
 

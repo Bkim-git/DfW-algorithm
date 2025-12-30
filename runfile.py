@@ -3,25 +3,28 @@
 Ensure the directory structure and module dependencies are correctly set before running.
 """
 import os, sys
-# WORKING_DIR = r"Path to the working directory containing this runfile"
-WORKING_DIR = r"E:\05_Codes\01_Published\DfW_package\DfW_v1.2"
+WORKING_DIR = r"E:\05_Codes\02_DEV\DfW_dev"
 LIB_DIR = os.path.join(WORKING_DIR, "Libs")
 sys.path.append(LIB_DIR); os.chdir(WORKING_DIR)
 
 import init, DfW
 
-SITE = "Site_example"
-CASES = ("Case_example",)
-RUN_ID = None
+SITE = "Site"
+# CASES = ("Case1", "Case2", "Case3")
+CASES = ("Case1",)
+RUN_ID = "run_win1.3"
 
-def execute(case):
+def execute(case, valid = True):
     params = init.load_params(WORKING_DIR, SITE, case, run_id=RUN_ID)
-    vid, extent = init.load_vid(params)
-    gt = init.load_gt(vid, extent, params)
-
-    DfW.Operator(vid, extent, params, gt=gt).run()
-    DfW.Visualization(vid, extent, params).run()
+    log_handle = init.setup_logging(params)
+    try:
+        vid, extent = init.load_vid(params)
+        DfW.Operator(vid, extent, params).run()
+        gt = init.load_gt(vid, extent, params)
+        DfW.Visualization(vid, extent, params).run(gt)
+    finally:
+        init.close_logging(log_handle)
 
 if __name__ == "__main__":
     for case in CASES:
-        execute(case)
+        execute(case, valid = True)
