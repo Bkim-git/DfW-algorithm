@@ -239,45 +239,6 @@ class Operator:
         self.__dict__.clear()
 
 #%%
-plt.rcParams.update({"font.family": "Arial", "figure.dpi": 300})
-
-class Visualization:
-    def __init__(self, Vid, extent, params):
-        self.Vid = Vid
-        self.savedir = Path(params["savedir"])
-        self.case = params["case"]
-
-        self.figsize = (4, 4)
-        self.hran = (0, 16)
-        self.interval = 1.0
-
-        self.offset = np.array(
-            [extent[0] - (extent[0] % 100), extent[2] - (extent[2] % 100)],
-            dtype=float,
-        )
-        self.extent = [
-            extent[0] - self.offset[0],
-            extent[1] - self.offset[0],
-            extent[2] - self.offset[1],
-            extent[3] - self.offset[1],
-        ]
-
-        self.basemap = self._load_basemap()
-        self.xy, self.est = self._load_results()
-
- 
-
-    def run(self):
-        print("[Plotting DfW estimates]")
-        for i, z in enumerate(self.est, start=1):
-            self._plot(z, f"{self.case}_Seg-{i}")
-
-        est_arr = np.array(self.est)
-        self._plot(np.nanmedian(est_arr, axis=0), "seg-mean")
-        self._plot(np.nanstd(est_arr, axis=0), "seg-std")
-        plt.close("all")
-
-#%%
 from scipy.interpolate import RegularGridInterpolator
 from scipy.stats import gaussian_kde
 import matplotlib.tri as mtri
