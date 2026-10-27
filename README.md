@@ -1,8 +1,8 @@
 # Depth-from-Wave (DfW)
 
 Nearshore water depth from video of surface waves: georectification, DMD wave analysis, depth inversion, maps and
-quality control. Windows 10/11 x64; runs offline. The GUI source code is not published; the earlier DfW-algorithm
-scripts are at [commit de3e617](https://github.com/Bkim-git/DfW-algorithm/tree/de3e617).
+quality control. Windows 10/11 x64; runs offline. The GUI is a demo release and remains under development. The GUI
+source code is not published; the earlier DfW-algorithm scripts are at [commit de3e617](https://github.com/Bkim-git/DfW-algorithm/tree/de3e617).
 
 ![DfW: depth map of example case 1](docs/screenshot.png)
 
