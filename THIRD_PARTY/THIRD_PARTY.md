@@ -48,6 +48,6 @@ The DfW scientific modules (`src/dfw/upstream`) are byte-identical copies of DfW
 | tzdata | 2025.2 | Apache-2.0 |
 | xarray | 2026.4.0 | Apache-2.0 |
 | zipp | 3.23.0 | MIT |
-| OpenBLAS (NumPy's BLAS/LAPACK, conda-forge libopenblas) | 0.3.34 | BSD-3-Clause (`LICENSES/OpenBLAS-LICENSE.txt`) |
-| Reference LAPACK (inside OpenBLAS) | as bundled | BSD-3-Clause (`LICENSES/LAPACK-LICENSE.txt`) |
-| gcp-free-uav-georectification (WP8, vendored as dfw.upstream.uav_pose_georect) | 98f3095 | MIT (`LICENSES/WP8-LICENSE.txt`) |
+| OpenBLAS (NumPy's BLAS/LAPACK, conda-forge libopenblas) | 0.3.34 | BSD-3-Clause (`OpenBLAS-LICENSE.txt`) |
+| Reference LAPACK (inside OpenBLAS) | as bundled | BSD-3-Clause (`LAPACK-LICENSE.txt`) |
+| gcp-free-uav-georectification (WP8, vendored as dfw.upstream.uav_pose_georect) | 98f3095 | MIT (`WP8-LICENSE.txt`) |
