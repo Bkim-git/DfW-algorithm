@@ -1,8 +1,7 @@
-# Depth-from-Wave (DfW)
+# Depth-from-Wave (DfW) v1.4.0 demo
 
 Nearshore water depth from video of surface waves: georectification, DMD wave analysis, depth inversion, maps and
-quality control. Windows 10/11 x64; runs offline. The GUI is a demo release and remains under development. The GUI
-source code is not published; the earlier DfW-algorithm scripts are at [commit de3e617](https://github.com/Bkim-git/DfW-algorithm/tree/de3e617).
+quality control. Windows 10/11 x64; runs offline. The GUI is a demo release and remains under development.
 
 ![DfW: depth map of example case 1](docs/screenshot.png)
 
@@ -43,9 +42,8 @@ and a runnable example. It is not needed to run the program.
 
 ## Licence
 
-MIT licence, Copyright (c) 2026 Byunguk Kim ([`LICENSE`](LICENSE)). Third-party notices are in
-[`THIRD_PARTY/`](THIRD_PARTY) and in the program folder. Qt and PySide6 are used under the LGPL-3.0 as separate,
-replaceable libraries in `lib\`.
+MIT licence, Copyright (c) 2026 Byunguk Kim ([`LICENSE`](LICENSE)). Third-party notices are in the program folder
+(`lib\LICENSES\`). Qt and PySide6 are used under the LGPL-3.0 as separate, replaceable libraries in `lib\`.
 
 ## Citation
 If you find this tool helpful, please consider citing the following works:
