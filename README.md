@@ -1,7 +1,7 @@
 # Depth-from-Wave (DfW) v1.4.0 demo
 
-Nearshore water depth from video of surface waves: georectification, DMD wave analysis, depth inversion, maps and
-quality control. Windows 10/11 x64; runs offline. The GUI is a demo release and remains under development.
+Nearshore bathymetry mapping from video of surface waves: georectification, DMD wave analysis, depth inversion,
+correction for nonlinearity (optional) and quality control. Windows 10/11 x64; runs offline. The GUI is a demo release and remains under development.
 
 ![DfW: depth map of example case 1](docs/screenshot.png)
 
