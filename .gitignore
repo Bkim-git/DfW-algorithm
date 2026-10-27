@@ -1,0 +1,4 @@
+# zips stay local: release zips are attached to the GitHub release (files over 100 MB are refused)
+*.zip
+# private backups of earlier versions
+backup/
