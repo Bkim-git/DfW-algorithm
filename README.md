@@ -4,6 +4,8 @@ Nearshore water depth from UAV video of surface waves: georectification, DMD wav
 and quality control. Windows 10/11 x64; runs offline. The desktop source code is not published; the earlier
 DfW-algorithm scripts (v1.3) are at [commit de3e617](https://github.com/Bkim-git/DfW-algorithm/tree/de3e617).
 
+![DfW Desktop: depth map of example case 1](screenshot.png)
+
 ## Downloads
 
 The files are on the [v1.4.0 release page](https://github.com/Bkim-git/DfW-algorithm/releases/tag/v1.4.0); their
@@ -13,7 +15,7 @@ checksums are in this repository (verify with `certutil -hashfile <file> SHA256`
 |---|---|---|
 | `DfW-Desktop-1.4.0-win64.zip` (217 MB) | Program | [sha256](DfW-Desktop-1.4.0-win64.zip.sha256) |
 | `DfW-Tutorial-1.4.0.zip` (1.4 GB) | Example case 1 with a processed tutorial project | [sha256](DfW-Tutorial-1.4.0.zip.sha256) |
-| `DfW-Engine-1.4.0-source.zip` (0.1 MB) | Source of the processing engine, for reference | [sha256](DfW-Engine-1.4.0-source.zip.sha256) |
+| `DfW-Source-1.4.0.zip` (0.1 MB) | Source of the processing code, for reference | [sha256](DfW-Source-1.4.0.zip.sha256) |
 
 ## Install
 
@@ -34,9 +36,9 @@ markers, a co-registered video, a basemap, a reference bathymetry and two unproc
 project adds the manually corrected GCP tracks, the georeferencing and the depth result; Import video and Co-register
 rebuild the frames and the co-registered video.
 
-## Engine source
+## Source
 
-`DfW-Engine-1.4.0-source.zip` contains the processing functions the program runs (video, rectification, tracking,
+`DfW-Source-1.4.0.zip` contains the processing functions the program runs (video, rectification, tracking,
 georectification, DMD, wavenumber, depth), a README on the processing chain and its differences from DfW-algorithm,
 and a runnable example. It is not needed to run the program. MIT licence, Copyright (c) 2026 Byunguk Kim.
 
